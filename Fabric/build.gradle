@@ -6,6 +6,11 @@ plugins {
 }
 
 def useLocalYungsApi = findProject(':yungsapi') != null
+def localYungsApiDir = providers.gradleProperty("yungsapi_local_dir")
+        .map { file(it) }
+        .orElse(rootProject.layout.projectDirectory.dir("../YUNGs-API-Continuation-push").asFile)
+        .get()
+def localYungsApiJar = file("${localYungsApiDir}/Fabric/build/libs/YungsApi-${mc_version}-Fabric-${yungsapi_version}.jar")
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
@@ -26,8 +31,8 @@ dependencies {
     }
 
     // YUNG's API
-    if (useLocalYungsApi) {
-        modImplementation files("libs/YungsApi-${mc_version}-Fabric-${yungsapi_version}.jar")
+    if (localYungsApiJar.exists()) {
+        modImplementation files(localYungsApiJar)
     } else {
         modImplementation "com.yungnickyoung.minecraft.yungsapi:YungsApi:${mc_version}-Fabric-${yungsapi_version}"
     }

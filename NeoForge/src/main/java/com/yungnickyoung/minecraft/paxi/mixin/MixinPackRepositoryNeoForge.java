@@ -3,7 +3,6 @@ package com.yungnickyoung.minecraft.paxi.mixin;
 import com.google.common.collect.ImmutableList;
 import com.yungnickyoung.minecraft.paxi.PaxiCommon;
 import com.yungnickyoung.minecraft.paxi.PaxiRepositorySource;
-import net.minecraft.Util;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
@@ -75,7 +74,7 @@ public abstract class MixinPackRepositoryNeoForge {
 
     @Inject(at=@At("RETURN"), method="rebuildSelected", cancellable = true)
     private void paxi_buildEnabledProfilesNeoForge(Collection<String> enabledNames, CallbackInfoReturnable<List<Pack>> cir) {
-        List<Pack> sortedEnabledPacks = cir.getReturnValue().stream().collect(Util.toMutableList());
+        List<Pack> sortedEnabledPacks = new ArrayList<>(cir.getReturnValue());
 
         // Fetch Paxi pack repository source
         Optional<RepositorySource> paxiRepositorySource = this.sources.stream()

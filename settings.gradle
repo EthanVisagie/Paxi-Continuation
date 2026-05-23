@@ -10,7 +10,7 @@ pluginManagement {
                 }
             }
             filter {
-                includeGroup("net.fabricmc")
+                includeGroupAndSubgroups("net.fabricmc")
                 includeGroup("fabric-loom")
             }
         }
@@ -56,4 +56,4 @@ plugins {
 }
 
 rootProject.name = 'paxi'
-include("Common", "Fabric", "Forge", "NeoForge")
+include("Common", "Fabric", "NeoForge")

@@ -39,16 +39,23 @@ runs {
     gameTestServer {
         systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
     }
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-    }
 }
+
+def localYungsApiDir = providers.gradleProperty("yungsapi_local_dir")
+        .map { file(it) }
+        .orElse(rootProject.layout.projectDirectory.dir("../YUNGs-API-Continuation-push").asFile)
+        .get()
+def localYungsApiJar = file("${localYungsApiDir}/NeoForge/build/libs/YungsApi-${mc_version}-NeoForge-${yungsapi_version}.jar")
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     implementation "net.neoforged:neoforge:${neoforge_version}"
-    implementation "com.yungnickyoung.minecraft.yungsapi:YungsApi:${mc_version}-NeoForge-${yungsapi_version}"
+    if (localYungsApiJar.exists()) {
+        implementation files(localYungsApiJar)
+    } else {
+        implementation "com.yungnickyoung.minecraft.yungsapi:YungsApi:${mc_version}-NeoForge-${yungsapi_version}"
+    }
 }
 
 String[] compatibleVersions = project.compatible_versions.split(',')

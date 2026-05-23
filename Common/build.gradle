@@ -4,6 +4,11 @@ plugins {
 }
 
 def useLocalYungsApi = findProject(':yungsapi') != null
+def localYungsApiDir = providers.gradleProperty("yungsapi_local_dir")
+        .map { file(it) }
+        .orElse(rootProject.layout.projectDirectory.dir("../YUNGs-API-Continuation-push").asFile)
+        .get()
+def localYungsApiJar = file("${localYungsApiDir}/Common/build/libs/YungsApi-${mc_version}-Common-${yungsapi_version}.jar")
 
 minecraft {
     version(mc_version)
@@ -15,8 +20,8 @@ minecraft {
 
 dependencies {
     compileOnly group:'org.spongepowered', name:'mixin', version:'0.8.5'
-    if (useLocalYungsApi) {
-        compileOnly files("libs/YungsApi-${mc_version}-Common-${yungsapi_version}.jar")
+    if (localYungsApiJar.exists()) {
+        compileOnly files(localYungsApiJar)
     } else {
         compileOnly("com.yungnickyoung.minecraft.yungsapi:YungsApi:${mc_version}-Common-${yungsapi_version}")
     }

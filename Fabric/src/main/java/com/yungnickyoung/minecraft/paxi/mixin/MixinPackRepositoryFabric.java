@@ -6,9 +6,8 @@ import com.yungnickyoung.minecraft.paxi.PaxiRepositorySource;
 import com.yungnickyoung.minecraft.paxi.client.ClientMixinUtil;
 import com.yungnickyoung.minecraft.paxi.util.IPaxiSourceProvider;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
+import net.fabricmc.fabric.impl.resource.pack.ModResourcePackCreator;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.Util;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
@@ -79,7 +78,7 @@ public abstract class MixinPackRepositoryFabric {
 
     @Inject(at = @At("RETURN"), method = "rebuildSelected", cancellable = true)
     private void paxi_buildEnabledProfilesFabric(Collection<String> enabledNames, CallbackInfoReturnable<List<Pack>> cir) {
-        List<Pack> sortedEnabledPacks = cir.getReturnValue().stream().collect(Util.toMutableList());
+        List<Pack> sortedEnabledPacks = new ArrayList<>(cir.getReturnValue());
 
         // Paxi repo source. Will be fetched differently depending if we're loading data or resource packs.
         Optional<RepositorySource> paxiRepositorySource = getPaxiRepositorySource();
